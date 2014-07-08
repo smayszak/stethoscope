@@ -12,8 +12,16 @@ if (Meteor.isClient) {
   });
 }
 
+Meteor.methods({
+  createHealthCheckResult: function (data) {
+    console.log('data was posted');
+    return {"status":"ok"};
+  }
+});
+
 if (Meteor.isServer) {
   Meteor.startup(function () {
     // code to run on server at startup
+    console.log("started");
   });
 }
