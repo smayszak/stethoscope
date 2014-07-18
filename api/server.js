@@ -25,8 +25,8 @@ ddpclient.connect(function(error) {
     return;
   }
 
-  setTimeout(function () {
-    ddpclient.call('createHealthCheckResult',  {"data":"my result"},
+  /*setTimeout(function () {
+    ddpclient.call('createHealthCheckResult',  [{"data":"my result from timeout"}],
       		function (err, result) { 
         		console.log('called function, result: ' + result);
       		},
@@ -35,10 +35,15 @@ ddpclient.connect(function(error) {
       		}
     	);
   }, 3000);
-
+*/
 
   console.log('connected!');
 });
+
+ddpclient.on('message', function(msg){
+	console.log("ddp message: " + msg);
+});
+
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -60,29 +65,25 @@ router.get('/', function(req, res) {
 	res.json({ message: 'hooray! welcome to our api!' });	
 });
 
-router.route('/exam')
+router.route('/exam/:server')
 	.post(function(req, res) {
-		console.log('entering post');
-		if(ddpclient === 'undefined'){
-			console.log('ddpclient not working');
-		}else{
-			console.log('ddpclinet is ok?');
-		}
-
-		ddpclient.call('createHealthCheckResult',  {"data":"my result"},
+		//to test use Postman and set to x-wwww-form-urlencoded the key is "data", value is the message
+		console.log(req.body.data);
+		ddpclient.call('createHealthCheckResult',  [{"data":req.body.data, "server":req.params.server}],
       		function (err, result) { 
         		console.log('called function, result: ' + result);
       		},
       		function () {              // callback which fires when server has finished
-        		console.log('updated');
+        		console.log('call completed');
       		}
     	);
 
-		res.json({ message: 'you posted a result!' });	
+		res.json({ message: 'message posted a result!' });	
 	})
 	.get(function(req, res){
 		res.json({message: 'you got a result'})
 	});
+
 
 // more routes for our API will happen here
 
