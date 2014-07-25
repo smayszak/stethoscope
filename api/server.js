@@ -4,8 +4,8 @@
 // =============================================================================
 console.log('starting');
 // call the packages we need
-var express    = require('express'); 		// call express
-var app        = express(); 				// define our app using express
+var express = require('express');		// call express
+var app = express();			// define our app using express
 var bodyParser = require('body-parser');
 var DDPClient = require("ddp");
 
@@ -27,13 +27,13 @@ ddpclient.connect(function(error) {
 
   /*setTimeout(function () {
     ddpclient.call('createHealthCheckResult',  [{"data":"my result from timeout"}],
-      		function (err, result) { 
-        		console.log('called function, result: ' + result);
-      		},
-      		function () {              // callback which fires when server has finished
-        		console.log('updated');
-      		}
-    	);
+      function (err, result) { 
+        console.log('called function, result: ' + result);
+        },
+        function () {              // callback which fires when server has finished
+          console.log('updated');
+    }
+    );
   }, 3000);
 */
 
@@ -49,39 +49,40 @@ ddpclient.on('message', function(msg){
 // this will let us get the data from a POST
 app.use(bodyParser());
 
-var port = process.env.PORT || 8080; 		// set our port
+var port = process.env.PORT || 8080;		// set our port
 
 // ROUTES FOR OUR API
 // =============================================================================
-var router = express.Router(); 				// get an instance of the express Router
+var router = express.Router();			// get an instance of the express Router
 
 router.use(function(req, res, next){
 	console.log('run middleware validation');
 	next();
 });
 
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
+// test route to make sure everything is working (accessed at GET http://localhost:8080/api or http://127.0.0.1:8080)
 router.get('/', function(req, res) {
-	res.json({ message: 'hooray! welcome to our api!' });	
+	res.json({ message: 'hooray! welcome to our api!' });
 });
 
 router.route('/exam/:server')
 	.post(function(req, res) {
 		//to test use Postman and set to x-wwww-form-urlencoded the key is "data", value is the message
-		console.log(req.body.data);
-		ddpclient.call('createHealthCheckResult',  [{"data":req.body.data, "server":req.params.server}],
-      		function (err, result) { 
-        		console.log('called function, result: ' + result);
-      		},
-      		function () {              // callback which fires when server has finished
-        		console.log('call completed');
-      		}
-    	);
+    //on a mac that is setup for dev work you may have to use "http://127.0.0.1:8080" instead of the localhost
+		//console.log(req.body.data);
+		ddpclient.call('createHealthCheckResult',  [{"success":req.body.success, "server":req.params.server}],
+      function (err, result) {
+        console.log('called function, result: ' + result);
+      },
+      function () {              // callback which fires when server has finished
+        console.log('call completed');
+      }
+    );
 
-		res.json({ message: 'message posted a result!' });	
+		res.json({ message: 'message posted a result!' });
 	})
 	.get(function(req, res){
-		res.json({message: 'you got a result'})
+		res.json({message: 'you got a result'});
 	});
 
 
