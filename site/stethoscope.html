@@ -13,15 +13,22 @@
   <input type="button" value="Click" />
 </template>
 <template name="ajaxResponse">
-	<h3>From the Server:</h3>
-	{{#each messages}}
-		{{>msg}}
+	{{#each environments}}
+		{{>result}}
 	
 	{{/each}}
 </template>
 
-<template name="msg">
-	<div>{{server}}</div>	
-	<div>{{msg}}</div>
-	<div>- {{msgdate}}</div>
+<template name="result">
+	<h3>From the Server: {{name}}</h3>
+	{{#each tests}}	
+		{{>testresult}}
+	{{/each}}
+</template>
+
+<template name="testresult">
+	hello
+	<div>Successfull:{{successfull}}</div>
+	<div>Date: {{createdate}}</div>
+
 </template>
