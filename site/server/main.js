@@ -11,21 +11,24 @@ Meteor.startup(function () {
   
   
 Meteor.methods({
-		createHealthCheckResult: function (data) {
+	saveHealthCheckResult: function (data) {
       console.log(data);
       if(!data.success)
       {
         throw new Meteor.Error("400", "The successfull element is required.");
       }
     
-      if(Environments.find({name: data.server}).count()===0)
+      Meteor.environment.post(data.server);
+
+      //do a check to see if the product exists in our database.
+      if(Products.find({name: data.product}).count()===0)
       {
-        Environments.insert({name:data.server});
-        console.log("failed to find: " + data.server);
+        Products.insert({name: data.product});
+        console.log("failed to find product " + data.product + "so it will be added");
       }
 
       //console.log(Environments.findOne({name:data.server})._id);
-      Tests.insert({successfull: data.success, createdate: new Date(), environment: Environments.findOne({name:data.server})._id});
+      Tests.insert({successfull: data.success, createdate: new Date(), environment: Environments.findOne({name:data.server})._id, runtime: data.runtime, testname: data.testname, product: Products.findOne({name: data.product})._id});
       console.log('Environments posted, count is:' + Environments.find().count());
       return {"status":"ok"};
       
@@ -33,3 +36,4 @@ Meteor.methods({
 
 
 });
+
