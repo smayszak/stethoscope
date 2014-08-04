@@ -70,7 +70,7 @@ router.route('/exam/:server')
 		//to test use Postman and set to x-wwww-form-urlencoded the key is "data", value is the message
     //on a mac that is setup for dev work you may have to use "http://127.0.0.1:8080" instead of the localhost
 		//console.log(req.body.data);
-		ddpclient.call('createHealthCheckResult',  [{"success":req.body.success, "server":req.params.server}],
+		ddpclient.call('saveHealthCheckResult',  [{"success":req.body.success, "server":req.params.server}],
       function (err, result) {
         console.log('called function, result: ' + result);
       },
