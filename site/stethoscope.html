@@ -5,6 +5,7 @@
 <body>
   {{> hello}}
   {{> ajaxResponse}}
+  {{> enviro}}
 </body>
 
 <template name="hello">
@@ -14,21 +15,18 @@
 </template>
 <template name="ajaxResponse">
 	{{#each environments}}
-		{{>result}}
-	
+		<h3>From the Server: {{name}}</h3>
+		{{#each tests}}	
+			<div>Successful: {{successful}}</div>
+			<div>Date: {{createdate}}</div>
+			<div class="runtime">Run Time: {{runtime}}</div>
+			<div class="testname">Test Name: {{testname}}</div>
+		{{/each}}
 	{{/each}}
 </template>
 
-<template name="result">
-	<h3>From the Server: {{name}}</h3>
-	{{#each tests}}	
-		{{>testresult}}
+<template name="enviro">
+	{{#each environments}}
+		<h3>Server: {{name}}</h3>
 	{{/each}}
-</template>
-
-<template name="testresult">
-	hello
-	<div>Successfull:{{successfull}}</div>
-	<div>Date: {{createdate}}</div>
-
 </template>
